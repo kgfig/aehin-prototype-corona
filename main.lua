@@ -12,60 +12,66 @@
 -- Supports Graphics 2.0
 ------------------------------------------------------------
 
-display.setStatusBar( display.HiddenStatusBar ) 
+-- Import libraries
 
 local widget = require ( "widget" )
 local composer = require ( "composer" )
 
-display.setDefault( "background", 1 )
+-- Import globals and constants
+
+local globals = require "globals"
+
+-- Set defaults
+display.setStatusBar( display.HiddenStatusBar ) 
+display.setDefault( "background", globals.colors.single.white)
+
+-- Forward reference to objects
+local navBarTabs, tabButtons, topBar
 
 -- Create buttons table for the tab bar
-local tabButtons = 
+
+tabButtons = 
 {
 	{
-		width = 32, height = 32,
-		defaultFile = "assets/tabIcon.png",
-		overFile = "assets/tabIcon-down.png",
-		label = "Home",
-		onPress = function() composer.gotoScene( "home" ); end,
+		width = globals.dimensions.tabItemWidth, height = globals.dimensions.tabBarHeight,
+		defaultFile = globals.images.tabHomeDefaultIcon,
+		overFile = globals.images.tabHomeDownIcon,
+		onPress = function() composer.gotoScene( globals.sceneKeys.home ); end,
 		selected = true
 	},
 	{
-		width = 32, height = 32,
-		defaultFile = "assets/tabIcon.png",
-		overFile = "assets/tabIcon-down.png",
-		label = "Program",
-		onPress = function() composer.gotoScene( "program" ); end,
+		width = globals.dimensions.tabItemWidth, height = globals.dimensions.tabBarHeight,
+		defaultFile = globals.images.tabProgramDefaultIcon,
+		overFile = globals.images.tabProgramDownIcon,
+		onPress = function() composer.gotoScene( globals.sceneKeys.program ); end,
 	},
 	{
-		width = 32, height = 32,
-		defaultFile = "assets/tabIcon.png",
-		overFile = "assets/tabIcon-down.png",
-		label = "AEHIN",
-		onPress = function() composer.gotoScene( "aehin" ); end,
+		width = globals.dimensions.tabItemWidth, height = globals.dimensions.tabBarHeight,
+		defaultFile = globals.images.tabCountriesDefaultIcon,
+		overFile = globals.images.tabCountriesDownIcon,
+		onPress = function() composer.gotoScene( globals.sceneKeys.countries ); end,
 	},
 	{
-		width = 32, height = 32,
-		defaultFile = "assets/tabIcon.png",
-		overFile = "assets/tabIcon-down.png",
-		label = "HINGX",
-		onPress = function() composer.gotoScene( "hingx" ); end,
+		width = globals.dimensions.tabItemWidth, height = globals.dimensions.tabBarHeight,
+		defaultFile = globals.images.tabFeedDefaultIcon,
+		overFile = globals.images.tabFeedDownIcon,
+		onPress = function() composer.gotoScene( globals.sceneKeys.rssFeed ); end,
 	}
 }
 
 --Create a tab-bar and place it at the bottom of the screen
-local demoTabs = widget.newTabBar
+navBarTabs = widget.newTabBar
 {
 	top = 0,
-	height = 52,
+	height = globals.dimensions.navBarHeight,
 	width = display.contentWidth,
-	backgroundFile = "assets/tabbar.png",
-	tabSelectedLeftFile = "assets/tabBar_tabSelectedLeft.png",
-	tabSelectedMiddleFile = "assets/tabBar_tabSelectedMiddle.png",
-	tabSelectedRightFile = "assets/tabBar_tabSelectedRight.png",
-	tabSelectedFrameWidth = 20,
-	tabSelectedFrameHeight = 52,
+	backgroundFile = globals.images.tabBarBG,
+	tabSelectedLeftFile = globals.images.tabSelectedLeft,
+	tabSelectedMiddleFile = globals.images.tabSelectedMiddle,
+	tabSelectedRightFile = globals.images.tabSelectedRight,
+	tabSelectedFrameWidth = globals.dimensions.tabSelectedFrameWidth,
+	tabSelectedFrameHeight = globals.dimensions.tabSelectedFrameHeight,
 	buttons = tabButtons
 }
 
-composer.gotoScene( "home" )
+composer.gotoScene( globals.sceneKeys.home )

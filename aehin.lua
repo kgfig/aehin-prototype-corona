@@ -31,14 +31,12 @@ local scene = composer.newScene()
 local function onRowRender( event )
 	local phase = event.phase
 	local row = event.row
-
 	local groupContentHeight = row.contentHeight
-	print( globals.countries[row.index] )
+	
+	print( row.index )
 	local rowTitle = display.newText( row, globals.countries[row.index], 0, 0, native.systemFontBold, 14 )
-
 	rowTitle.x = LEFT_PADDING
 	rowTitle.anchorX = 0
-
 	rowTitle.y = groupContentHeight  * 0.5
 	rowTitle:setFillColor( 0, 0, 0 )
 end
@@ -58,17 +56,17 @@ function scene:create( event )
 	
 	list = widget.newTableView
 	{
-		top = 52,
-		width = display.contentWidth - 20,
-		height = display.contentHeight - 52,
+		top = globals.dimensions.navBarHeight,
+		width = display.contentWidth,
+		height = display.contentHeight - globals.dimensions.navBarHeight,
 		maskFile = globals.images.listMaskFile,
 		onRowRender = onRowRender,
-		onRowTouch = onRowTouch
+		hideBackground = true
 	}
 
-	for i = 1, table.getn( globals.countries ) do
+	for i = 1, #globals.countries do
 		list:insertRow{
-			height = 72,
+			rowHeight = globals.dimensions.rowHeight
 		}
 	end
 

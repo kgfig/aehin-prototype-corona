@@ -18,6 +18,8 @@ local widget = require ( "widget" )
 -- Initialize globals and constants
 local globals = require "globals" 
 
+local TOP_PADDING = 15
+
 -- Forward reference to objects
 local scrollView, screenText
 
@@ -58,27 +60,24 @@ function scene:create( event )
 	scrollView = widget.newScrollView
 	{
 		left = 0,
-		top = 0,
+		top = globals.dimensions.navBarHeight,
 		width = display.contentWidth,
-		height = display.contentHeight,
+		height = display.contentHeight - globals.dimensions.navBarHeight,
 		bottomPadding = 50,
-		id = "homeScrollView",
 		horizontalScrollDisabled = true,
 		verticalScrollDisabled = false,
+		hideBackground = true,
 		listener = scrollViewListener
 	}
 	
 	--Create a text object that displays the current scene name and insert it into the scene's view
-	screenText = display.newText( globals.textTemplates.intro, display.contentCenterX, 0, display.contentWidth - 30, 0, native.systemFontBold, 14 )
+	screenText = display.newText( globals.textTemplates.intro, display.contentCenterX, 0, display.contentWidth - 30, 0, native.systemFont, 14 )
 	screenText:setFillColor( 0 )
 	screenText.anchorY = 0
+	screenText.y = TOP_PADDING
 
-	screenText.y = 52 + 15-- tab height + 10
-
-	-- Add text object to scroll view
 	scrollView:insert( screenText )
 
-	-- Add scroll view to scene group
 	sceneGroup:insert( scrollView )
 end
 

@@ -10,18 +10,78 @@
 -- This file is used to display the corresponding screen content when the user clicks the tab bar. 
 
 local composer = require ( "composer" )
+local widget = require( "widget" )
+
+-- Import globals and other data for this module
+local globals = require "globals"
+local schedule = require "schedule"
+
+-- Forward reference to objects
+local list
+
+local LEFT_PADDING = 10
 
 --Create a composer scene for this module
 local scene = composer.newScene()
+
+local function onRowRender( event )
+	local phase = event.phase
+	local row = event.row
+	local groupContentHeight = row.contentHeight
+	local isCategory = row.isCategory
+	local rowText = row.params.rowTitle
+	local rowTitle
+
+	if isCategory then
+		rowTitle = display.newText( row, row.params.rowTitle, 0, 0, native.systemFontBold, 14 )
+	else 
+		rowTitle = display.newText( row, row.params.rowTitle, 0, 0, native.systemFont, 14)
+	end
+
+	rowTitle.x = LEFT_PADDING
+	rowTitle.anchorX = 0
+	rowTitle.y = groupContentHeight * 0.5
+	rowTitle:setFillColor( 0, 0, 0)
+end
+
+local function onRowTouch( event )
+	local phase = event.phase
+	local row = event.row
+
+	-- do nothing
+end
 
 --Create the scene
 function scene:create( event )
 	local sceneGroup = self.view
 	
-	--Create a text object that displays the current scene name and insert it into the scene's view
-	local screenText = display.newText( "Program", display.contentCenterX, display.contentCenterY, native.systemFontBold, 18 )
-	screenText:setFillColor( 0 )
-	sceneGroup:insert( screenText )
+	list = widget.newTableView
+	{
+		top = globals.dimensions.navBarHeight,
+		width = display.contentWidth,
+		height = display.contentHeight - globals.dimensions.navBarHeight,
+		maskFile = globals.images.listMaskFile,
+		onRowRender = onRowRender
+	}
+
+	for dayIndex, day in pairs( schedule ) do
+		list:insertRow({
+			rowHeight = globals.dimensions.rowHeight,
+			isCategory = true,
+			rowColor = { default=globals.colors.rgb.darkGray, over=globals.colors.rgb.darkGray },
+			params = {rowTitle = day.title .. " (" .. day.date .. ") " }
+		})
+
+		for eventId, schedEvent in pairs( day.events ) do
+			list:insertRow({
+				rowHeight = globals.dimensions.rowHeight,
+				isCategory = false,
+				params = {rowTitle = schedEvent.time .. "   " .. schedEvent.eventName }
+			})
+		end
+	end
+
+	sceneGroup:insert( list )
 end
 
 --Add the createScene listener
